@@ -10,10 +10,10 @@ import (
 )
 
 type TelemetryHandler struct {
-	Rabbit *rabbitmq.RabbitMQClient
+	Rabbit rabbitmq.Publisher
 }
 
-func NewTelemetryHandler(rabbit *rabbitmq.RabbitMQClient) *TelemetryHandler {
+func NewTelemetryHandler(rabbit rabbitmq.Publisher) *TelemetryHandler {
 	return &TelemetryHandler{Rabbit: rabbit}
 }
 
