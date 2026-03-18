@@ -6,11 +6,13 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
+	"telemetry-backend/database"
 	"telemetry-backend/handlers"
 	"telemetry-backend/rabbitmq"
 )
 
 func main() {
+	// ── RabbitMQ ────────────────────────────────────────────
 	rabbitURL := os.Getenv("RABBITMQ_URL")
 	if rabbitURL == "" {
 		rabbitURL = "amqp://admin:admin@rabbitmq:5672/"
@@ -19,22 +21,40 @@ func main() {
 	var rabbitClient *rabbitmq.RabbitMQClient
 	var err error
 
-	// 🔁 Retry de conexão
 	for i := 0; i < 10; i++ {
 		rabbitClient, err = rabbitmq.NewRabbitMQClient(rabbitURL, "telemetry_queue")
 		if err == nil {
-			log.Println("Connected to RabbitMQ")
 			break
 		}
-
 		log.Println("RabbitMQ not ready, retrying in 3s...")
 		time.Sleep(3 * time.Second)
 	}
-
 	if err != nil {
 		log.Fatal("Failed to connect to RabbitMQ:", err)
 	}
 
+	// ── PostgreSQL ───────────────────────────────────────────
+	dbURL := os.Getenv("DATABASE_URL")
+	if dbURL == "" {
+		dbURL = "postgres://telemetry:telemetry@postgres:5432/telemetrydb?sslmode=disable"
+	}
+
+	var pgClient *database.PostgresClient
+
+	for i := 0; i < 10; i++ {
+		pgClient, err = database.NewPostgresClient(dbURL)
+		if err == nil {
+			break
+		}
+		log.Println("PostgreSQL not ready, retrying in 3s...")
+		time.Sleep(3 * time.Second)
+	}
+	if err != nil {
+		log.Fatal("Failed to connect to PostgreSQL:", err)
+	}
+	defer pgClient.Close()
+
+	// ── HTTP Server ──────────────────────────────────────────
 	router := gin.Default()
 
 	handler := handlers.NewTelemetryHandler(rabbitClient)

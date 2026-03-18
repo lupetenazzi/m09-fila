@@ -1,6 +1,23 @@
 version: '3.8'
 
 services:
+  postgres:
+    image: postgres:16-alpine
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: telemetry
+      POSTGRES_PASSWORD: telemetry
+      POSTGRES_DB: telemetrydb
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./migrations/init.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U telemetry -d telemetrydb"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
   rabbitmq:
     image: rabbitmq:3-management
     ports:
@@ -22,5 +39,11 @@ services:
     depends_on:
       rabbitmq:
         condition: service_healthy
+      postgres:
+        condition: service_healthy
     environment:
       - RABBITMQ_URL=amqp://admin:admin@rabbitmq:5672/
+      - DATABASE_URL=postgres://telemetry:telemetry@postgres:5432/telemetrydb?sslmode=disable
+
+volumes:
+  postgres_data:
