@@ -1,9 +1,4 @@
--- ============================================================
--- Telemetry Database Schema
--- Suporta múltiplos tipos de sensores e leituras (analog/discrete)
--- ============================================================
 
--- Enum para tipo de valor
 CREATE TYPE value_type AS ENUM ('analog', 'discrete');
 
 -- Tabela principal de leituras de telemetria

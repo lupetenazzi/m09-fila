@@ -12,7 +12,7 @@ import (
 )
 
 func main() {
-	// ── RabbitMQ ────────────────────────────────────────────
+
 	rabbitURL := os.Getenv("RABBITMQ_URL")
 	if rabbitURL == "" {
 		rabbitURL = "amqp://admin:admin@rabbitmq:5672/"
@@ -33,7 +33,6 @@ func main() {
 		log.Fatal("Failed to connect to RabbitMQ:", err)
 	}
 
-	// ── PostgreSQL ───────────────────────────────────────────
 	dbURL := os.Getenv("DATABASE_URL")
 	if dbURL == "" {
 		dbURL = "postgres://telemetry:telemetry@postgres:5432/telemetrydb?sslmode=disable"
@@ -54,7 +53,6 @@ func main() {
 	}
 	defer pgClient.Close()
 
-	// ── HTTP Server ──────────────────────────────────────────
 	router := gin.Default()
 
 	handler := handlers.NewTelemetryHandler(rabbitClient)
