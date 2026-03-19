@@ -5,16 +5,18 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"telemetry-backend/database"
 	"telemetry-backend/models"
 	"telemetry-backend/rabbitmq"
 )
 
 type TelemetryHandler struct {
 	Rabbit rabbitmq.Publisher
+	DB     database.TelemetryRepository
 }
 
-func NewTelemetryHandler(rabbit rabbitmq.Publisher) *TelemetryHandler {
-	return &TelemetryHandler{Rabbit: rabbit}
+func NewTelemetryHandler(rabbit rabbitmq.Publisher, db database.TelemetryRepository) *TelemetryHandler {
+	return &TelemetryHandler{Rabbit: rabbit, DB: db}
 }
 
 func (h *TelemetryHandler) ReceiveTelemetry(c *gin.Context) {

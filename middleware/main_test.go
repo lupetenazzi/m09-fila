@@ -166,8 +166,6 @@ func createTestDatabase(t *testing.T) *sql.DB {
 	}
 
 	db.Exec("DELETE FROM telemetry_readings")
-	db.Exec("DELETE FROM devices")
-	db.Exec("DELETE FROM sensors")
 
 	return db
 }

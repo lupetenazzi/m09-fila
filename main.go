@@ -55,7 +55,7 @@ func main() {
 
 	router := gin.Default()
 
-	handler := handlers.NewTelemetryHandler(rabbitClient)
+	handler := handlers.NewTelemetryHandler(rabbitClient, pgClient)
 	router.POST("/telemetry", handler.ReceiveTelemetry)
 
 	log.Println("Server running on port 8080")

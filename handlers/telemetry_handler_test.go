@@ -32,7 +32,7 @@ func setupRouter(mock rabbitmq.Publisher) *gin.Engine {
 	gin.SetMode(gin.TestMode)
 	router := gin.Default()
 
-	handler := NewTelemetryHandler(mock)
+	handler := NewTelemetryHandler(mock, nil)
 	router.POST("/telemetry", handler.ReceiveTelemetry)
 
 	return router
