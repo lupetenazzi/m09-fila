@@ -5,8 +5,9 @@ import (
 	"fmt"
 	"log"
 
-	_ "github.com/lib/pq"
 	"telemetry-backend/models"
+
+	_ "github.com/lib/pq"
 )
 
 // PostgresClient implementa TelemetryRepository usando PostgreSQL.
@@ -32,8 +33,8 @@ func NewPostgresClient(dsn string) (*PostgresClient, error) {
 // Save persiste uma leitura de telemetria na tabela telemetry_readings.
 func (p *PostgresClient) Save(t models.Telemetry) error {
 	const query = `
-		INSERT INTO telemetry_readings
-			(device_id, sensor_type, value_type, value, timestamp)
+		INSERT INTO telemetry
+			(device_id, sensor_id, value, timestamp)
 		VALUES
 			($1, $2, $3, $4, $5)
 	`

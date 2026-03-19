@@ -45,5 +45,16 @@ services:
       - RABBITMQ_URL=amqp://admin:admin@rabbitmq:5672/
       - DATABASE_URL=postgres://telemetry:telemetry@postgres:5432/telemetrydb?sslmode=disable
 
+  middleware:
+    build: ./middleware
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+    environment:
+      - RABBITMQ_URL=amqp://admin:admin@rabbitmq:5672/
+      - DATABASE_URL=postgres://telemetry:telemetry@postgres:5432/telemetrydb?sslmode=disable
+
 volumes:
   postgres_data:
