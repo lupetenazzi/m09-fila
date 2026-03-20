@@ -47,7 +47,6 @@ export default function () {
 
 export function handleSummary(data) {
   return {
-    "/results/smoke_summary.json": JSON.stringify(data, null, 2),
     stdout: summary("SMOKE TEST", data),
   };
 }

@@ -93,8 +93,7 @@ export default function () {
 
 export function handleSummary(data) {
   return {
-    "/results/validation_summary.json": JSON.stringify(data, null, 2),
-    stdout: summary(data),
+    stdout: summary("VALIDATION TEST", data),
   };
 }
 

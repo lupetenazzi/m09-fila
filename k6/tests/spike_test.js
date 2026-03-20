@@ -66,8 +66,7 @@ export default function () {
 
 export function handleSummary(data) {
   return {
-    "/results/spike_summary.json": JSON.stringify(data, null, 2),
-    stdout: summary(data),
+    stdout: summary("SPIKE TEST", data),
   };
 }
 
